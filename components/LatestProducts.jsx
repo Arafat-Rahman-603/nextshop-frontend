@@ -17,7 +17,7 @@ export default function LatestProducts() {
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
 
-        setProducts(sorted.slice(0, 1));
+        setProducts(sorted.slice(0, 6));
       } catch (err) {
         console.error(err);
       } finally {
@@ -72,9 +72,9 @@ export default function LatestProducts() {
                 <span className="text-blue-600 dark:text-blue-400 font-bold">
                   ${product.price}
                 </span>
-                <Link href={`/products/${product.id}`}>
+                <Link href={`/buy-now?id=${product._id}`}>
                   <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded hover:bg-blue-700 transition">
-                    View
+                    Buy Now
                   </button>
                 </Link>
               </div>
