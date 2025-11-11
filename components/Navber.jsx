@@ -94,7 +94,7 @@ export default function Navbar() {
             <Link
               key={item.name}
               href={item.path}
-              className="py-2 px-5 text-base font-medium rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105"
+              className="py-1 px-4 text-base font-medium rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105"
             >
               {item.name}
             </Link>
@@ -116,7 +116,7 @@ export default function Navbar() {
             />
           ) : (
             <SignInButton>
-              <button className="px-4 py-2 bg-blue-500 rounded hover:bg-blue-600 transition">
+              <button className="px-2 py-1 bg-blue-500 rounded hover:bg-blue-600 transition ">
                 Sign In
               </button>
             </SignInButton>
