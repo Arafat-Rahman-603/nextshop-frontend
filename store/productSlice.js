@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
-  const res = await fetch(`/api/products`);
+  const res = await fetch(`https://nextshop-backend.onrender.com/api/products`);
   if (!res.ok) throw new Error("Failed to fetch products");
   return await res.json();
 });

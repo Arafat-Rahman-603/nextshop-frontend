@@ -15,7 +15,7 @@ export default function ProductCard({ product }) {
     setTimeout(() => setToast(""), 1500);
   };
   return (
-    <div className="bg-white rounded-xl shadow p-4 flex flex-col relative py-15">
+    <div className="bg-white rounded-xl shadow p-3 flex flex-col relative pb-15">
       <img
         src={product.image}
         alt={product.name}
