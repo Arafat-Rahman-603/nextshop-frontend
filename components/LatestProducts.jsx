@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Spinner from "@/components/Spinner";
 
 export default function LatestProducts() {
   const [products, setProducts] = useState([]);
@@ -11,7 +12,7 @@ export default function LatestProducts() {
   useEffect(() => {
     async function fetchLatest() {
       try {
-        const res = await fetch("https://nextshop-backend.onrender.com/api/products");
+        const res = await fetch("/api/products");
         const data = await res.json();
         const sorted = data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -29,9 +30,7 @@ export default function LatestProducts() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="text-center text-gray-400 py-12">Loading latest products...</div>
-    );
+    return <Spinner label="Loading latest products..." />;
   }
 
   if (products.length === 0) {
@@ -48,7 +47,7 @@ export default function LatestProducts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
         {products.map((product, i) => (
           <motion.div
-            key={product.id}
+            key={product._id}
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1 }}
@@ -70,7 +69,7 @@ export default function LatestProducts() {
               </p>
               <div className="flex justify-between items-center mt-3">
                 <span className="text-blue-600 dark:text-blue-400 font-bold">
-                  ${product.price}
+                  ৳ {product.price}
                 </span>
                 <Link href={`/buy-now?id=${product._id}`}>
                   <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded hover:bg-blue-700 transition">

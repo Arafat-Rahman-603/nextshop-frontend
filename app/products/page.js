@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "@/store/productSlice";
+import Spinner from "@/components/Spinner";
 import ProductCard from "@/components/ProductCard";
 
 export default function ProductsPage() {
@@ -10,7 +11,7 @@ export default function ProductsPage() {
 
   useEffect(() => { dispatch(fetchProducts()); }, [dispatch]);
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
+  if (loading) return <Spinner label="Loading products..." />;
   if (error) return <div className="text-center mt-10 text-red-500">{error}</div>;
 
   return (

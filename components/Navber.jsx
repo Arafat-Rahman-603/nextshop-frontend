@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { CiMenuFries } from "react-icons/ci";
 import { IoCloseSharp } from "react-icons/io5";
-import { ShoppingCart } from "lucide-react";
+import { Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
@@ -23,10 +23,11 @@ export default function Navbar() {
   const menuItems = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
-    // { name: "About", path: "/about" },
+    { name: "Cart", path: "/cart" },
     { name: "Blog", path: "/blog" },
   ];
 
+  // 🔹 Fetch products from backend
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -40,7 +41,8 @@ export default function Navbar() {
     fetchProducts();
   }, []);
 
-  useEffect(() => {
+  // 🔹 Handle Search (manual or on typing)
+  const handleSearch = () => {
     if (!searchTerm) {
       setFilteredProducts([]);
       return;
@@ -49,8 +51,9 @@ export default function Navbar() {
       p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProducts(filtered);
-  }, [searchTerm, products]);
+  };
 
+  // 🔹 When selecting product suggestion
   const handleSelectProduct = (id) => {
     router.push(`/products/${id}`);
     setSearchTerm("");
@@ -59,7 +62,6 @@ export default function Navbar() {
 
   return (
     <>
-     
       <nav className="flex justify-between items-center px-6 py-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white shadow-lg relative z-50">
         <Link
           href="/"
@@ -67,20 +69,32 @@ export default function Navbar() {
         >
           NextShop
         </Link>
+
+        {/* 🔹 Desktop Search Bar */}
         <div className="hidden md:flex flex-col items-center relative">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="px-4 py-2 rounded-full w-[300px] bg-gray-700 focus:outline-none ring-1 ring-gray-500 focus:ring-2 focus:ring-blue-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="px-4 py-2 rounded-full w-[300px] bg-gray-700 focus:outline-none ring-1 ring-gray-500 focus:ring-2 focus:ring-blue-400"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded-full transition-all"
+            >
+              <Search className="w-4 h-4" />
+            </button>
+          </div>
+
           {filteredProducts.length > 0 && (
             <div className="absolute top-12 left-0 w-full bg-white text-black rounded-lg shadow-lg z-50 max-h-60 overflow-auto">
               {filteredProducts.map((product) => (
                 <div
-                  key={product.id}
-                  onClick={() => handleSelectProduct(product.id)}
+                  key={product._id} // ✅ FIXED: use _id instead of id
+                  onClick={() => handleSelectProduct(product._id)}
                   className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
                 >
                   {product.name}
@@ -89,6 +103,8 @@ export default function Navbar() {
             </div>
           )}
         </div>
+
+        {/* 🔹 Desktop Menu */}
         <div className="hidden md:flex items-center gap-2">
           {menuItems.map((item) => (
             <Link
@@ -97,31 +113,29 @@ export default function Navbar() {
               className="py-1 px-4 text-base font-medium rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:scale-105"
             >
               {item.name}
+              {item.name === "Cart" && cartItems.length > 0 && (
+                <span className="ml-2 bg-blue-500 text-white text-xs rounded-full px-2">
+                  {cartItems.length}
+                </span>
+              )}
             </Link>
           ))}
 
-          {/* Cart */}
-          {/* <Link href="/cart" className="relative flex items-center">
-            <ShoppingCart className="w-6 h-6 hover:text-blue-400 transition-colors duration-300" />
-            {cartItems.length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-xs text-white w-5 h-5 flex items-center justify-center rounded-full">
-                {cartItems.length}
-              </span>
-            )}
-          </Link> */}
           {isSignedIn ? (
             <UserButton
-              afterSignOutUrl="/" 
+              afterSignOutUrl="/"
               appearance={{ elements: { userButtonAvatarBox: "w-12 h-12" } }}
             />
           ) : (
             <SignInButton>
-              <button className="px-2 py-1 bg-blue-500 rounded hover:bg-blue-600 transition ">
+              <button className="px-2 py-1 bg-blue-500 rounded hover:bg-blue-600 transition">
                 Sign In
               </button>
             </SignInButton>
           )}
         </div>
+
+        {/* 🔹 Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="md:hidden text-3xl focus:outline-none hover:text-blue-400 transition-colors duration-300"
@@ -129,20 +143,32 @@ export default function Navbar() {
           {isOpen ? <IoCloseSharp /> : <CiMenuFries />}
         </button>
       </nav>
+
+      {/* 🔹 Mobile Search */}
       <div className="md:hidden block bg-gray-900 py-2 px-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="px-4 py-2 rounded-full w-full bg-gray-800 text-white focus:outline-none ring-1 ring-gray-500 focus:ring-2 focus:ring-blue-400"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="flex gap-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="px-4 py-2 rounded-full w-full bg-gray-800 text-white focus:outline-none ring-1 ring-gray-500 focus:ring-2 focus:ring-blue-400"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-blue-500 hover:bg-blue-600 p-2 rounded-full"
+          >
+            <Search className="w-5 h-5 text-white" />
+          </button>
+        </div>
+
         {filteredProducts.length > 0 && (
           <div className="mt-2 bg-white text-black rounded-lg shadow-lg max-h-60 overflow-auto">
             {filteredProducts.map((product) => (
               <div
-                key={product.id}
-                onClick={() => handleSelectProduct(product.id)}
+                key={product._id}
+                onClick={() => handleSelectProduct(product._id)}
                 className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
               >
                 {product.name}
@@ -151,6 +177,8 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
+      {/* 🔹 Mobile Menu Animation */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
