@@ -69,7 +69,7 @@ export default function LatestProducts() {
               </p>
               <div className="flex justify-between items-center mt-3">
                 <span className="text-blue-600 dark:text-blue-400 font-bold">
-                  ৳ {product.price}
+                  ${product.price}
                 </span>
                 <Link href={`/buy-now?id=${product._id}`}>
                   <button className="bg-blue-600 text-white text-sm px-3 py-1 rounded hover:bg-blue-700 transition">
