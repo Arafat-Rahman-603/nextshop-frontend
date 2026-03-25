@@ -137,7 +137,7 @@ Phone: ${form.phone.value.trim()}`,
 
             <div className="flex justify-between items-center">
               <p className="text-gray-600">Shipping fee:</p>
-              <p className="text-gray-600">৳65</p>
+              <p className="text-gray-600">৳80</p>
             </div>
 
             {!isCartCheckout ? (
@@ -182,10 +182,10 @@ Phone: ${form.phone.value.trim()}`,
                 <p className="text-gray-600">Total:</p>
                 <p className="text-gray-600">
                   {isCartCheckout
-                    ? `$${(cart.totalAmount + 65).toFixed(2)}`
-                    : `$${(
+                    ? `৳${(cart.totalAmount + 80).toFixed(2)}`
+                    : `৳${(
                         ((product || fetchedProduct)?.price || 0) * quantity +
-                        65
+                        80
                       ).toFixed(2)}`}
                 </p>
               </div>
