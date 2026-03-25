@@ -24,6 +24,7 @@ export default function Navbar() {
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
     { name: "Cart", path: "/cart" },
+    { name: "My Orders", path: "/profile", authOnly: true },
     { name: "Blog", path: "/blog" },
   ];
 
@@ -106,7 +107,9 @@ export default function Navbar() {
 
         {/* 🔹 Desktop Menu */}
         <div className="hidden md:flex items-center gap-2">
-          {menuItems.map((item) => (
+          {menuItems
+            .filter((item) => !item.authOnly || isSignedIn)
+            .map((item) => (
             <Link
               key={item.name}
               href={item.path}
@@ -189,7 +192,9 @@ export default function Navbar() {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="fixed inset-0 bg-gray-900 text-white flex flex-col items-center justify-center space-y-8 z-40"
           >
-            {menuItems.map((item, i) => (
+            {menuItems
+              .filter((item) => !item.authOnly || isSignedIn)
+              .map((item, i) => (
               <motion.div
                 key={item.name}
                 initial={{ opacity: 0, x: 50 }}

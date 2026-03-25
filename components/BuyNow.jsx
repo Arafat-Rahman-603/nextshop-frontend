@@ -19,7 +19,7 @@ export default function BuyNowPage() {
 
   // Get product or cart from Redux
   const product = useSelector((state) =>
-    state.products.items.find((p) => p._id === id)
+    state.products.items.find((p) => p._id === id),
   );
   const cart = useSelector((state) => state.cart);
 
@@ -36,7 +36,9 @@ export default function BuyNowPage() {
     async function fetchProduct() {
       if (!id || product) return;
       try {
-        const res = await fetch(`/api/products/${id}`);
+        const res = await fetch(
+          `https://nextshop-backend.onrender.com/api/products/${id}`,
+        );
         const data = await res.json();
         setFetchedProduct(data);
       } catch (e) {
@@ -69,7 +71,7 @@ Product: ${(product || fetchedProduct)?.name}
 Image: ${(product || fetchedProduct)?.image}
 Quantity: ${quantity}
 Total: $${(((product || fetchedProduct)?.price || 0) * quantity + 65).toFixed(
-            2
+            2,
           )}
 Shipping Address: ${form.address.value.trim()}
 Phone: ${form.phone.value.trim()}`,
@@ -83,11 +85,50 @@ Phone: ${form.phone.value.trim()}`,
       });
 
       if (res.ok) {
-        setStatus("✅ Purchase confirmed!");
-        setTimeout(
-          () => router.push(isCartCheckout ? "/cart" : "/products"),
-          3000
-        );
+        // Save order to backend
+        try {
+          const orderItems = isCartCheckout
+            ? cart.cartItems.map((ci) => ({
+                productId: ci._id,
+                name: ci.name,
+                price: ci.price,
+                quantity: ci.quantity,
+                image: ci.image,
+              }))
+            : [
+                {
+                  productId: (product || fetchedProduct)?._id,
+                  name: (product || fetchedProduct)?.name,
+                  price: (product || fetchedProduct)?.price,
+                  quantity,
+                  image: (product || fetchedProduct)?.image,
+                },
+              ];
+
+          const orderTotal = isCartCheckout
+            ? cart.totalAmount + 80
+            : ((product || fetchedProduct)?.price || 0) * quantity + 80;
+
+          await fetch("https://nextshop-backend.onrender.com/api/orders", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-user-id": user.id,
+            },
+            body: JSON.stringify({
+              customerName: data.name,
+              items: orderItems,
+              totalAmount: orderTotal,
+              shippingAddress: form.address.value.trim(),
+              phone: form.phone.value.trim(),
+            }),
+          });
+        } catch (orderErr) {
+          console.error("Failed to save order:", orderErr);
+        }
+
+        setStatus("✅ Purchase confirmed! Redirecting to your orders...");
+        setTimeout(() => router.push("/profile"), 2000);
         form.reset();
       } else {
         const error = await res.text();

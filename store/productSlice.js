@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchProducts = createAsyncThunk("products/fetch", async () => {
@@ -13,9 +12,17 @@ const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProducts.pending, (s) => { s.loading = true; })
-      .addCase(fetchProducts.fulfilled, (s, a) => { s.loading = false; s.items = a.payload; })
-      .addCase(fetchProducts.rejected, (s, a) => { s.loading = false; s.error = a.error.message; });
+      .addCase(fetchProducts.pending, (s) => {
+        s.loading = true;
+      })
+      .addCase(fetchProducts.fulfilled, (s, a) => {
+        s.loading = false;
+        s.items = a.payload;
+      })
+      .addCase(fetchProducts.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.error.message;
+      });
   },
 });
 
