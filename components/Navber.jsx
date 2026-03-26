@@ -32,7 +32,7 @@ export default function Navbar() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch("/api/products");
+        const res = await fetch("https://nextshop-backend.onrender.com/api/products");
         const data = await res.json();
         setProducts(data || []);
       } catch (err) {
