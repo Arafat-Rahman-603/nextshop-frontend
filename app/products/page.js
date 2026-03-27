@@ -46,7 +46,16 @@ export default function ProductsPage() {
 
       <div className="max-w-7xl mx-auto grid gap-6 px-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {randomItems.map((p) => (
-          <ProductCard key={p._id} product={p} />
+        <ProductCard 
+         key={p._id} 
+         product={p}   
+         style={{
+               display: "-webkit-box",
+               WebkitLineClamp: 3,
+               WebkitBoxOrient: "vertical",
+               overflow: "hidden",
+         }}
+        />
         ))}
       </div>
     </div>

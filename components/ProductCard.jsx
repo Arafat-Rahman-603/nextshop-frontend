@@ -21,8 +21,27 @@ export default function ProductCard({ product }) {
         alt={product.name}
         className="w-full h-48 object-cover rounded-md mb-3"
       />
-      <h3 className="font-semibold text-lg">{product.name}</h3>
-      <p className="text-gray-500 text-sm">{product.description}</p>
+      <h3 
+      className="font-semibold text-lg"
+      style={{
+               display: "-webkit-box",
+               WebkitLineClamp: 1,
+               WebkitBoxOrient: "vertical",
+               overflow: "hidden",
+         }}
+      >
+        {product.name}
+      </h3>
+      <p
+      className="text-gray-500 text-sm" 
+      style={{
+               display: "-webkit-box",
+               WebkitLineClamp: 2,
+               WebkitBoxOrient: "vertical",
+               overflow: "hidden",
+         }}>
+          {product.description}
+         </p>
       <div className=" flex items-center justify-between mt-4 w-[90%] absolute bottom-5 ">
         <span className="text-blue-600 font-bold text-[1.2rem]">
           ৳ {product.price}
